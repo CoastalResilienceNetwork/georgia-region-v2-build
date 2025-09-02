@@ -1,7 +1,4 @@
 <script setup>
-import { computed } from 'vue'
-import { useQuasar } from 'quasar'
-//import { SigninButton } from './components/SigninButton.vue'
 
 //import esri component libs globally so they are available in multiple components
 import '@arcgis/map-components/components/arcgis-map'
@@ -10,10 +7,8 @@ import '@arcgis/map-components/components/arcgis-basemap-gallery'
 import '@arcgis/map-components/components/arcgis-layer-list'
 import '@arcgis/map-components/components/arcgis-search'
 
-const $q = useQuasar()
-const mobile = computed(() => {
-  return $q.screen.lt.sm || $q.screen.lt.xs ? true : false
-})
+
+
 </script>
 
 <template>
