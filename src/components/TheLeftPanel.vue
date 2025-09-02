@@ -94,7 +94,7 @@ function expandItemGroup() {
 background: linear-gradient(180deg,rgba(244, 242, 230, 1) 0%, rgba(243, 242, 230, 1) 24%, rgba(230, 235, 226, 1) 45%, rgba(210, 225, 220, 1) 67%, rgba(212, 218, 202, 1) 100%);">
         <q-scroll-area
           class="q-px-md"
-          :style="mobile ? 'height: calc(100vh - 390px); background-color: rgba(255, 255, 255, 0.89);' : 'height: calc(100vh - 124px);background-color: rgba(252, 253, 254, 0.5); /* White with 85% opacity */'"
+          :style="mobile ? 'height: calc(100vh - 390px); background-color: rgba(255, 255, 255, 0.89);' : 'height: calc(100vh - 124px);background-color: rgba(252, 253, 254, 0.5);'"
 
         >
           <!-- top level menu bar -->
