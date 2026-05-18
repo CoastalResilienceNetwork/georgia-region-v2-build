@@ -25,35 +25,34 @@ function expandItemGroup() {
   arcgisLayerList.listItemCreatedFunction = (event) => {
     const { item } = event
     //console.log('item', item.layer.layer)
-    // Add a calcite slider for updating opacity on group layers.
-    if (item.layer.layer) {
-      if (item.layer.layer.type === 'map-image' || item.layer.layer.type === 'feature') {
-        const div = document.createElement('div')
-        div.id = 'opacity-slider'
-        div.innerHTML = 'Opacity'
-        const slider = document.createElement('calcite-slider')
-        slider.labelHandles = true
-        slider.labelTicks = true
-        slider.min = 0
-        slider.minLabel = '0'
-        slider.max = 1
-        slider.maxLabel = '1'
-        slider.scale = 's'
-        slider.step = 0.01
-        slider.value = 1
-        slider.ticks = 0.5
+    // Add an opacity slider for any non-group layer list item that supports opacity.
+    const targetLayer = item.layer?.layer || item.layer
+    if (targetLayer && typeof targetLayer.opacity === 'number' && targetLayer.type !== 'group') {
+      const div = document.createElement('div')
+      div.id = 'opacity-slider'
+      div.innerHTML = 'Opacity'
+      const slider = document.createElement('calcite-slider')
+      slider.labelHandles = true
+      slider.labelTicks = true
+      slider.min = 0
+      slider.minLabel = '0'
+      slider.max = 1
+      slider.maxLabel = '1'
+      slider.scale = 's'
+      slider.step = 0.01
+      slider.value = targetLayer.opacity
+      slider.ticks = 0.5
 
-        slider.addEventListener('calciteSliderChange', () => {
-          item.layer.opacity = slider.value
-        })
+      slider.addEventListener('calciteSliderChange', () => {
+        targetLayer.opacity = slider.value
+      })
 
-        div.appendChild(slider)
+      div.appendChild(slider)
 
-        item.panel = {
-          content: div,
-          icon: 'chevron-down',
-          title: 'Change layer opacity',
-        }
+      item.panel = {
+        content: div,
+        icon: 'chevron-down',
+        title: 'Change layer opacity',
       }
 
       //list.item.hidden = true; // Hide the Local Landscapes laye
@@ -69,11 +68,25 @@ function expandItemGroup() {
     if (item.title == 'DUMMY') {
       item.layer.layer.listmode = 'none'
     }
+
+    // Only for MapImageLayer parents
+    if (item.layer.type === 'map-image' && item.children && item.children.length) {
+      const child = item.children.getItemAt(0) // or find by title/id
+
+      // When parent checkbox is toggled, sync child visibility
+      item.watch('visible', (value) => {
+        child.layer.visible = value
+      })
+
+      // Optionally: start with parent off, child off
+      item.visible = false
+      child.layer.visible = false
+    }
   }
 }
 </script>
 <template>
-  <div class="bg-blue-grey-1 q-pt-sm" >
+  <div class="bg-blue-grey-1 q-pt-sm">
     <div class="">
       <q-tabs
         v-model="mapStore.tab"
@@ -89,13 +102,28 @@ function expandItemGroup() {
       </q-tabs>
     </div>
     <q-tab-panels v-model="mapStore.tab" animated class="bg-blue-grey-1 q-px-sm">
-
-      <q-tab-panel name="about" class="q-mt-sm q-pt-none q-px-none" style="background: #F4F2E6;
-      background: linear-gradient(180deg,rgba(244, 242, 230, 1) 0%, rgba(243, 242, 230, 1) 24%, rgba(230, 235, 226, 1) 45%, rgba(210, 225, 220, 1) 67%, rgba(212, 218, 202, 1) 100%);">
+      <q-tab-panel
+        name="about"
+        class="q-mt-sm q-pt-none q-px-none"
+        style="
+          background: #f4f2e6;
+          background: linear-gradient(
+            180deg,
+            rgba(244, 242, 230, 1) 0%,
+            rgba(243, 242, 230, 1) 24%,
+            rgba(230, 235, 226, 1) 45%,
+            rgba(210, 225, 220, 1) 67%,
+            rgba(212, 218, 202, 1) 100%
+          );
+        "
+      >
         <q-scroll-area
           class="q-px-md"
-          :style="mobile ? 'height: calc(100vh - 390px); background-color: rgba(255, 255, 255, 0.89);' : 'height: calc(100vh - 124px);background-color: rgba(252, 253, 254, 0.5);'"
-
+          :style="
+            mobile
+              ? 'height: calc(100vh - 390px); background-color: rgba(255, 255, 255, 0.89);'
+              : 'height: calc(100vh - 124px);background-color: rgba(252, 253, 254, 0.5);'
+          "
         >
           <!-- top level menu bar -->
           <div>
@@ -112,7 +140,6 @@ function expandItemGroup() {
             restoration activities. For additional project information, visit the
             <a href="http://coastalresilience.org/project/georgia">Georgia</a> home page.
           </p>
-         
 
           <div class="row q-mt-md flex-center q-pa-sm">
             <div class="col-9">
@@ -268,7 +295,7 @@ function expandItemGroup() {
             Locally specific information to help support community-level engagement processes,
             inform decisions, and track successes.
           </p>
-           <p class="text-caption text-grey-7 q-mt-lg">
+          <p class="text-caption text-grey-7 q-mt-lg">
             This site was prepared by Camden County staff under grant award #NA18NOS4190146 to the
             Georgia Department of Natural Resources from the Office for Coastal Management, National
             Oceanic and Atmospheric Administration. The statements, findings, conclusions, and

@@ -3,6 +3,10 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
 import Map from '@arcgis/core/Map'
 import PopupTemplate from '@arcgis/core/PopupTemplate.js'
 import { onMounted } from 'vue'
+import GroupLayer from '@arcgis/core/layers/GroupLayer.js'
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js'
+import ImageryLayer from '@arcgis/core/layers/ImageryLayer.js'
+import TileLayer from '@arcgis/core/layers/TileLayer.js'
 /**GET STORE */
 import { useMapStore } from '../stores/map'
 
@@ -16,7 +20,7 @@ function openPanel(active) {
 onMounted(() => {
   console.log('Map is ready')
   const arcgisMap = document.querySelector('arcgis-map')
- 
+
   const popupTemplate = new PopupTemplate({
     fieldInfos: [
       {
@@ -101,6 +105,742 @@ onMounted(() => {
     id: 'crs',
     sublayers: crsSublayers.reverse(),
   })
+
+  // Create group layers for layerlist
+  let crsGroup = new GroupLayer({
+    title: 'CRS Explorer',
+    id: 'crsGroup',
+    layers: [
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/0',
+        title: 'State Bounds',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/1',
+        title: 'Community Bounds',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/2',
+        title: 'USFW Critical Habitat',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/3',
+        title: 'Future OSP Eligible',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/4',
+        title: 'OSP Eligible',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/5',
+        title: 'Excluded Areas',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_CRS_Explorer/FeatureServer/6',
+        title: 'aSFHA',
+        visible: false,
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Wetland Potential',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Wetland Potential',
+            id: 88,
+            visible: true,
+          },
+        ],
+      }),
+    ],
+  })
+  crsGroup.layers.reverse()
+
+  let slrGroup = new GroupLayer({
+    title: 'Flood and Sea Level Rise',
+    id: 'slr',
+    layers: [
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/33',
+        title: 'Limit of Moderate Wave Action (LiMWA)',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/34',
+        title: 'Shoreline Change Rate (EPR)',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/35',
+        title: 'NOAA Shallow Coastal Flooding Area',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_FloodSLR/FeatureServer/1',
+        title: 'Storm Surge Category 5',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_FloodSLR/FeatureServer/2',
+        title: 'Storm Surge Category 4',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_FloodSLR/FeatureServer/3',
+        title: 'Storm Surge Category 3',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_FloodSLR/FeatureServer/4',
+        title: 'Storm Surge Category 2',
+        visible: false,
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_FloodSLR/FeatureServer/5',
+        title: 'Storm Surge Category 1',
+        visible: false,
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 0 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 0 ft Sea Level Rise',
+            id: 99,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 1 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 1 ft Sea Level Rise',
+            id: 100,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 2 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 2 ft Sea Level Rise',
+            id: 101,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 3 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 3 ft Sea Level Rise',
+            id: 102,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 4 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 4 ft Sea Level Rise',
+            id: 103,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 5 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 5 ft Sea Level Rise',
+            id: 104,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 6 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 6 ft Sea Level Rise',
+            id: 105,
+            visible: true,
+          },
+        ],
+      }),
+      new MapImageLayer({
+        url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+        title: 'Water depth (relative to Mean Higher High Water) with 8 ft Sea Level Rise',
+        visible: false,
+        sublayers: [
+          {
+            title: 'Water depth (relative to Mean Higher High Water) with 8 ft Sea Level Rise',
+            id: 106,
+            visible: true,
+          },
+        ],
+      }),
+    ],
+  })
+  slrGroup.layers.reverse()
+
+  let commGroup = new GroupLayer({
+    title: 'Community Planning',
+    id: 'comm',
+    layers: [
+      new GroupLayer({
+        title: 'Critical Infrastructure',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/1',
+            title: 'Hurricane Evac Routes',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/2',
+            title: 'Water Facilities',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/3',
+            title: 'Wastewater Treatment Plants',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/4',
+            title: 'Culverts (2011)',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/5',
+            title: 'Schools',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/6',
+            title: 'Police Stations',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/7',
+            title: 'Hospitals',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/8',
+            title: 'Fire Stations',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/9',
+            title: 'EOC',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/10',
+            title: 'Community Water',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/11',
+            title: 'Road Centerline',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/12',
+            title: 'Sewer',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/13',
+            title: 'Municipal Water',
+            visible: false,
+          }),
+        ],
+      }),
+      new GroupLayer({
+        title: 'FEMA Flood',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/15',
+            title: 'FloodZone_VE',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/16',
+            title: 'FloodZone_AE',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/17',
+            title: 'FloodZone_A',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/18',
+            title: 'FloodZone_X',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/19',
+            title: 'Flood Zone by BFE (ft)',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/20',
+            title: 'Base Flood Elevation Feet',
+            visible: false,
+          }),
+        ],
+      }),
+      new GroupLayer({
+        title: 'Future LandUse',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/22',
+            title: 'St Marys Future Land Use 2017',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/23',
+            title: 'Woobine Future Land Use 2017',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/24',
+            title: 'Kingsland Future Land Use 2017',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/25',
+            title: 'Camden Future Land Use 2017',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/26',
+            title: 'OLD Future Land Use 2008',
+            visible: false,
+          }),
+        ],
+      }),
+      new FeatureLayer({
+        url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/27',
+        title: '2021 Parcels (zoom to view)',
+        visible: false,
+      }),
+      new GroupLayer({
+        title: 'Zoning',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/29',
+            title: 'Kingsland',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/30',
+            title: 'St Marys',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/31',
+            title: 'Camden County',
+            visible: false,
+          }),
+        ],
+      }),
+      new GroupLayer({
+        title: 'Flood and SLR Layers',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/33',
+            title: 'Limit of Moderate Wave Action (LiMWA)',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/34',
+            title: 'Shoreline Change Rate (EPR)',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/35',
+            title: 'NOAA_ShallowCoastalFloodingArea',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/36',
+            title: 'StormSurge_Cat5',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/37',
+            title: 'StormSurge_Cat4',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/38',
+            title: 'StormSurge_Cat3',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/39',
+            title: 'StormSurge_Cat2',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/40',
+            title: 'StormSurge_Cat1',
+            visible: false,
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 0 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 0 ft Sea Level Rise',
+                id: 99,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 1 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 1 ft Sea Level Rise',
+                id: 100,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 2 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 2 ft Sea Level Rise',
+                id: 101,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 3 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 3 ft Sea Level Rise',
+                id: 102,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 4 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 4 ft Sea Level Rise',
+                id: 103,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 5 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 5 ft Sea Level Rise',
+                id: 104,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 6 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 6 ft Sea Level Rise',
+                id: 105,
+                visible: true,
+              },
+            ],
+          }),
+          new MapImageLayer({
+            url: 'https://cumulus-ags.tnc.org/arcgis/rest/services/nascience/CCS_Rasters_1/MapServer/',
+            title: 'Water depth (relative to Mean Higher High Water) with 8 ft Sea Level Rise',
+            visible: false,
+            sublayers: [
+              {
+                title: 'Water depth (relative to Mean Higher High Water) with 8 ft Sea Level Rise',
+                id: 106,
+                visible: true,
+              },
+            ],
+          }),
+        ],
+      }),
+      new GroupLayer({
+        title: 'Ecological',
+        id: '',
+        visible: false,
+        layers: [
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/42',
+            title: 'Groundwater Recharge Areas',
+            visible: false,
+          }),
+          new GroupLayer({
+            title: 'Marsh Migration',
+            visible: false,
+            layers: [
+              new GroupLayer({
+                title: 'Sea Level Rise 1.5 ft',
+                visible: false,
+                layers: [
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/45',
+                    title: 'Marsh Migration Space',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/46',
+                    title: 'Percent Estimated Future Development (2100)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/47',
+                    title: 'Percent Secured From Development',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/48',
+                    title: 'Size of Migration Space (Acres)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/49',
+                    title: 'Condition Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/50',
+                    title: 'Physical Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/51',
+                    title: 'Resilience Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/52',
+                    title: 'Resilience Score with Trend',
+                    visible: false,
+                  }),
+                ],
+              }),
+              new GroupLayer({
+                title: 'Sea Level Rise 3.0 ft',
+                visible: false,
+                layers: [
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/54',
+                    title: 'Marsh Migration Space',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/55',
+                    title: 'Percent Estimated Future Development (2100)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/56',
+                    title: 'Percent Secured From Development',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/57',
+                    title: 'Size of Migration Space (Acres)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/58',
+                    title: 'Condition Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/59',
+                    title: 'Physical Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/60',
+                    title: 'Resilience Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/61',
+                    title: 'Resilience Score with Trend',
+                    visible: false,
+                  }),
+                ],
+              }),
+              new GroupLayer({
+                title: 'Sea Level Rise 4.0 ft',
+                visible: false,
+                layers: [
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/63',
+                    title: 'Marsh Migration Space',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/64',
+                    title: 'Percent Estimated Future Development (2100)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/65',
+                    title: 'Percent Secured From Development',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/66',
+                    title: 'Size of Migration Space (Acres)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/67',
+                    title: 'Condition Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/68',
+                    title: 'Physical Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/69',
+                    title: 'Resilience Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/70',
+                    title: 'Resilience Score with Trend',
+                    visible: false,
+                  }),
+                ],
+              }),
+              new GroupLayer({
+                title: 'Sea Level Rise 6.5 ft',
+                visible: false,
+                layers: [
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/72',
+                    title: 'Marsh Migration Space',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/73',
+                    title: 'Percent Estimated Future Development (2100)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/74',
+                    title: 'Percent Secured From Development',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/75',
+                    title: 'Size of Migration Space (Acres)',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/76',
+                    title: 'Condition Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/77',
+                    title: 'Physical Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/78',
+                    title: 'Resilience Score',
+                    visible: false,
+                  }),
+                  new FeatureLayer({
+                    url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/79',
+                    title: 'Resilience Score with Trend',
+                    visible: false,
+                  }),
+                ],
+              }),
+            ],
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/80',
+            title: 'National Wetland Inventory 2015',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/81',
+            title: 'Protected Areas',
+            visible: false,
+          }),
+          new FeatureLayer({
+            url: 'https://services.arcgis.com/F7DSX1DSNSiWmOqh/arcgis/rest/services/NST_GA_Georgia/FeatureServer/82',
+            title: 'Soils',
+            visible: false,
+          }),
+        ],
+      }),
+    ],
+  })
+  commGroup.layers.reverse()
 
   let slrSublayers = [
     {
@@ -198,7 +938,7 @@ onMounted(() => {
   })
   arcgisMap.map = new Map({
     basemap: 'topo',
-    layers: [comm, slr, crs],
+    layers: [commGroup, slrGroup, crsGroup],
   })
 })
 </script>
@@ -365,5 +1105,20 @@ onMounted(() => {
   outline: none !important;
 }
 
-.esri-popup .sizer { width: 500px !important; }
+.esri-popup .sizer {
+  width: 500px !important;
+}
+
+.esri-legend__service {
+  border-bottom: none !important;
+}
+
+.esri-legend__symbol {
+  height: 10px !important;
+  width: 10px !important;
+}
+
+h3.esri-widget__heading {
+  line-height: 1.2rem !important;
+}
 </style>
