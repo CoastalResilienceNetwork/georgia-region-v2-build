@@ -1,0 +1,1 @@
+import{kv as r,kw as a,kx as c}from"./index-BpRwgmUh.js";const _=(e,t)=>{const o=e.__vccOpts||e;for(const[s,n]of t)o[s]=n;return o},i={},l={class:"about"};function u(e,t){return c(),r("div",l,t[0]||(t[0]=[a("h1",null,"This is an about page",-1)]))}const d=_(i,[["render",u]]);export{d as default};
